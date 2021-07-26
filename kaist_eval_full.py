@@ -3,11 +3,14 @@ from bbGt import *
 import numpy as np
 # writened by nh,2021.7.26
 
+
 def kaist_eval_full(dtDir, gtDir, reval=True, writeRes=True):
     tname = os.path.split(dtDir)[-1]
 
-    bbsNms = aggreg_dets(dtDir, reval, tname)
-
+    bbsNms, isEmpty = aggreg_dets(dtDir, reval, tname)
+    if ~isEmpty[0] or ~isEmpty[1] or ~isEmpty[2]:
+        # no detection
+        return None
     exps = [
         ['Reasonable-all', 'test-all', [55, float("inf")], ['none', 'partial']],
         ['Reasonable-day', 'test-day', [55, float("inf")], ['none', 'partial']],
@@ -34,6 +37,7 @@ def kaist_eval_full(dtDir, gtDir, reval=True, writeRes=True):
         pass
 
     return res
+
 
 # return aggregated files
 # bbsNm.test-all
