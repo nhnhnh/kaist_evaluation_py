@@ -1,5 +1,7 @@
 import os
 import numpy as np
+
+
 # writened by nh,2021.7.26
 
 class OBJ(object):
@@ -35,7 +37,7 @@ def loadAll(gtDir, dtDir, pLoad):
         else:
             dtFs = fs[0][1]
 
-    #print(len(gtFs))
+    # print(len(gtFs))
 
     # load ground truth persistent keyPrv gtPrv;
     # key = {gtDir, pLoad};

@@ -8,8 +8,9 @@ def kaist_eval_full(dtDir, gtDir, reval=True, writeRes=True):
     tname = os.path.split(dtDir)[-1]
 
     bbsNms, isEmpty = aggreg_dets(dtDir, reval, tname)
-    if ~isEmpty[0] or ~isEmpty[1] or ~isEmpty[2]:
+    if (isEmpty[1]) or (isEmpty[2]):
         # no detection
+        print('this epoch has 0 detection result')
         return None
     exps = [
         ['Reasonable-all', 'test-all', [55, float("inf")], ['none', 'partial']],
@@ -21,9 +22,9 @@ def kaist_eval_full(dtDir, gtDir, reval=True, writeRes=True):
         ['Occ=none', 'test-all', [1, float("inf")], ['none']],
         ['Occ=partial', 'test-all', [1, float("inf")], ['partial']],
         ['Occ=heavy', 'test-all', [1, float("inf")], ['heavy']],
-        ['all', 'test-all', [1,float("inf")], ['none', 'partial']],
-        ['all-day', 'test-day', [1,float("inf")], ['none', 'partial']],
-        ['all-night', 'test-night', [1,float("inf")], ['none', 'partial']],
+        #['all', 'test-all', [1,float("inf")], ['none', 'partial']],
+        #['all-day', 'test-day', [1,float("inf")], ['none', 'partial']],
+        #['all-night', 'test-night', [1,float("inf")], ['none', 'partial']],
     ]
 
     res = []
@@ -47,6 +48,8 @@ def aggreg_dets(dtDir, reval, tname):
     conditons = ['test-all', 'test-day', 'test-night']
     for cond in conditons:
         desName = tname + '-' + cond + '.txt'
+        newp = os.path.abspath(os.path.join(dtDir,'..'))
+        desName = os.path.join(newp,desName)
         split_end = os.path.split(dtDir)[-1]
         le = len(split_end)
         tmpstr = dtDir[:-le]
