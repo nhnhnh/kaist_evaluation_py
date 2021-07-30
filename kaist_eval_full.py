@@ -1,5 +1,5 @@
 import os
-from bbGt import *
+from utils.bbGt import *
 import numpy as np
 # writened by nh,2021.7.26
 
@@ -130,7 +130,8 @@ def run_exp(res, iexp, gtDir, bbsNms):
     # bbsNms.(sprintf('%s', strrep(iexp{2}, '-', '_')))
     bbsNm = bbsNms[iexp[1]]
     # original annotations
-    annoDir = os.path.join(gtDir, iexp[1], 'arcnn_vis')
+    annoDir = os.path.join(gtDir, iexp[1], 'annotations')
+    #print(annoDir)
     gt, dt = loadAll(annoDir, bbsNm, pLoad)
     # 给每一帧计算
     gt_n = []
@@ -140,6 +141,12 @@ def run_exp(res, iexp, gtDir, bbsNms):
         gt_n.append(gtn)
         dt_n.append(dtn)
     fp, tp, score, miss = compRoc(gt_n, dt_n, 1, ref.copy())
+    if fp is None or tp is None or score is None or miss is None:
+        strshow = '%-30s \t can\'t cal' % \
+                  (iexp[0])
+        print(strshow)
+        res.append(res_e)
+        return res
     miss_ori = np.exp(np.mean(np.log(np.maximum(1-miss,1e-10))))
     roc_ori = [score, fp, tp]
 
@@ -148,7 +155,7 @@ def run_exp(res, iexp, gtDir, bbsNms):
     res_e['roc'] = roc_ori
 
     # improved annotations
-    annoDir = os.path.join(gtDir, iexp[1], 'arcnn_lwir')
+    annoDir = os.path.join(gtDir, iexp[1], 'annotations_KAIST_test_set')
     gt, dt = loadAll(annoDir, bbsNm, pLoad)
     # 给每个gt计算
     gt_n = []
